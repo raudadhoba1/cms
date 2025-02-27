@@ -1,16 +1,16 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import MarkAtt from "./pages/teachers/MarkAtt";
+import TeacherDashboard from "./pages/teachers/TeacherDashboard";
 
 const MainPage = () => {
   const [sidebarContent, setSidebarContent] = useState([]);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [hoveredItemId, setHoveredItemId] = useState(null); // Track hovered item
-  const [selectedItem, setSelectedItem] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [activeComponent, setActiveComponent] = useState('teacher-dashboard'); // Track which component to show
 
   const navigate = useNavigate();
 
@@ -24,11 +24,12 @@ const MainPage = () => {
       navigate('/login');
       return;
     }
+
     const permissions = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/permissions/${role}`);
+        const response = await axios.get(`http://172.17.30.231:8080/api/permissions/${role}`);
         setSidebarContent(response.data);
-        setSelectedItem = response.data[0];
+        setSelectedItem(response.data[0]);
       } catch (error) {
         console.error('Error fetching sidebar content:', error);
       }
@@ -39,12 +40,19 @@ const MainPage = () => {
     }
   }, [role, navigate]);
 
+  const handleSidebarClick = (item) => {
+    setSelectedItem(item);
+    if (item.permissions === 'Mark Attendance') {
+      setActiveComponent('mark-attendance');  // Set active component to Mark Attendance
+    } else {
+      setActiveComponent('teacher-dashboard'); // Set active component to Teacher Dashboard
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: 0, padding: 0 }}>
       {/* Header */}
       <div
-
         className="header d-flex align-items-center justify-content-between"
         style={{
           position: 'fixed',
@@ -60,19 +68,18 @@ const MainPage = () => {
         }}
       >
         <h2>{organization}</h2>
-      <div className="d-flex align-items-center"> 
-      <FaUserCircle size={30} style={{ marginRight: '10px' }} />
-      <div className="text-left">
-        <span className="d-block" style={{ fontSize: '1rem' }}>
-          {firstName} {lastName}
-        </span>
-        <p className="mb-0" style={{ fontSize: '0.5rem' }}>
-          {role}
-        </p>
-    </div>
-  </div>
+        <div className="d-flex align-items-center">
+          <FaUserCircle size={30} style={{ marginRight: '10px' }} />
+          <div className="text-left">
+            <span className="d-block" style={{ fontSize: '1rem' }}>
+              {firstName} {lastName}
+            </span>
+            <p className="mb-0" style={{ fontSize: '0.5rem' }}>
+              {role}
+            </p>
+          </div>
+        </div>
       </div>
-
 
       <div style={{ display: 'flex', flex: 1, marginTop: '60px' }}>
         {/* Sidebar */}
@@ -106,6 +113,7 @@ const MainPage = () => {
                 }}
                 onMouseEnter={() => setHoveredItemId(item.id)} // Set the hovered item
                 onMouseLeave={() => setHoveredItemId(null)} // Reset on mouse leave
+                onClick={() => handleSidebarClick(item)} // Handle item click
               >
                 {isSidebarExpanded || hoveredItemId === item.id ? (
                   <>
@@ -141,14 +149,18 @@ const MainPage = () => {
           style={{
             flex: 1,
             padding: '10px',
-            backgroundColor: '#101125',
-            color: '#ffffff',
+            backgroundColor: 'white',
+            color: 'black',
             overflowY: 'auto',
             paddingTop: '60px',
           }}
         >
-          <h1>{selectedItem?.permissions || 'Main Page'}</h1>
-          <p>Content related to "{selectedItem?.permissions}" goes here.</p>
+          {/* Dynamically Render Components Based on Selection */}
+          {activeComponent === 'mark-attendance' ? (
+            <MarkAtt /> // Render Mark Attendance Component
+          ) : (
+            <TeacherDashboard /> // Render Teacher Dashboard Component
+          )}
         </div>
       </div>
     </div>

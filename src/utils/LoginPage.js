@@ -10,12 +10,19 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // If the user is already authenticated, navigate to the respective page
     if (localStorage.getItem('isAuthenticated')) {
       const role = localStorage.getItem('role');
       if (role === 'ADMIN') {
         navigate('/admin');
       } else if (role === 'USER') {
         navigate('/user');
+      } else if (role === 'TEACHER') {
+        navigate('/teacher');
+      } else if (role === 'STUDENT') {
+        navigate('/student');
+      } else if (role === 'LIBRARIAN') {
+        navigate('/librarian');
       }
     }
   }, [navigate]);
@@ -23,6 +30,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Check if both email and password are provided
     if (!email || !password) {
       setShowError(true);
       return;
@@ -30,41 +38,44 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8080/api/login', {
+      const response = await axios.post('http://172.17.30.231:8080/api/login', {
         email,
         password,
       });
 
+      // Check if response is successful
       if (response.status === 200) {
-        const { userId, email, firstName, lastName, role,organization, status } = response.data;
+        const { userId, email, firstName, lastName, role, organization, status } = response.data;
 
         if (userId) {
+          // Store user details in localStorage
           localStorage.setItem('isAuthenticated', 'true');
           localStorage.setItem('userId', userId);
           localStorage.setItem('email', email);
           localStorage.setItem('firstName', firstName);
           localStorage.setItem('lastName', lastName);
           localStorage.setItem('role', role);
-          localStorage.setItem('organization',organization);
+          localStorage.setItem('organization', organization);
           localStorage.setItem('status', status);
 
+          // Navigate based on user role
           if (role === 'ADMIN') {
             navigate('/admin');
-          } else if(role === "TEACHER") {
+          } else if (role === 'TEACHER') {
             navigate('/teacher');
           } else if (role === 'STUDENT') {
             navigate('/student');
-          }else if (role === 'LIBRARIAN') {
+          } else if (role === 'LIBRARIAN') {
             navigate('/librarian');
           } else {
             navigate('/');
           }
         }
       } else {
-        setShowError(true);
+        setShowError(true); // Show error if login fails
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error during login:', error.response || error.message);
       setShowError(true);
     } finally {
       setLoading(false);
@@ -112,6 +123,7 @@ const LoginPage = () => {
                 </button>
               </form>
 
+              {/* Show error message if credentials are invalid */}
               {showError && (
                 <div className="alert alert-danger mt-3">
                   Invalid credentials. Please try again.

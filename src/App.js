@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./utils/LoginPage";
 import HomePage from "./HomePage";
 import MainPage from "./MainPage";
-
+import MarkAtt from "./pages/teachers/MarkAtt";
+import TeacherDashboard from "./pages/teachers/TeacherDashboard";
+import TeacherProfile from "./pages/teachers/TeacherProfile";
 
 function App() {
  
@@ -17,9 +19,11 @@ function App() {
         <Route path="/admin" element={<MainPage />} />
         <Route path="/teacher" element={<MainPage />} />
         <Route path="/student" element={<MainPage />} />
-        <Route path="/librarian" element={<MainPage />} />
-        
-        
+        <Route path="/librarian" element={<MainPage />} />        
+        <Route path="/MarkAtt" element={<MarkAtt />} />
+        <Route path="TeacherDashboard" element={<TeacherDashboard />} />
+        <Route path="TeacherProfile" element={<TeacherProfile />} />  
+
       </Routes>
     </Router>
   );
