@@ -3,11 +3,14 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+
+  const backend_url = process.env.backend_url
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
+  //console.log(backend_url)
 
   useEffect(() => {
     if (localStorage.getItem('isAuthenticated')) {
@@ -30,24 +33,20 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8080/api/login', {
+      const response = await axios.post('http://172.17.30.231:8080/api/login', {
         email,
         password,
       });
 
       if (response.status === 200) {
-        const { userId, email, firstName, lastName, role,organization, status } = response.data;
+        const { userId, email, name, role } = response.data;
 
         if (userId) {
-          localStorage.setItem('isAuthenticated', 'true');
           localStorage.setItem('userId', userId);
           localStorage.setItem('email', email);
-          localStorage.setItem('firstName', firstName);
-          localStorage.setItem('lastName', lastName);
+          localStorage.setItem('name', name); 
           localStorage.setItem('role', role);
-          localStorage.setItem('organization',organization);
-          localStorage.setItem('status', status);
-
+        
           if (role === 'ADMIN') {
             navigate('/admin');
           } else if(role === "TEACHER") {

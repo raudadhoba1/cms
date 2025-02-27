@@ -1,78 +1,81 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import StudentDashboard from './pages/student/StudentDashboard';
+import StudentProfile from './pages/student/StudentProfile';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 const MainPage = () => {
   const [sidebarContent, setSidebarContent] = useState([]);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [hoveredItemId, setHoveredItemId] = useState(null); // Track hovered item
-  const [selectedItem, setSelectedItem] = useState(null)
+  const [hoveredItemId, setHoveredItemId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
 
   const navigate = useNavigate();
 
   const role = localStorage.getItem('role');
-  const firstName = localStorage.getItem('firstName');
-  const lastName = localStorage.getItem('lastName');
-  const organization = localStorage.getItem('organization');
+  const name = localStorage.getItem('name');
 
   useEffect(() => {
     if (!role) {
       navigate('/login');
       return;
     }
-    const permissions = async () => {
+
+    const fetchPermissions = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/permissions/${role}`);
+        const response = await axios.get(`http://172.17.30.231:8080/api/permissions/${role}`);
         setSidebarContent(response.data);
-        setSelectedItem = response.data[0];
+        setSelectedItem(response.data[0]);
       } catch (error) {
         console.error('Error fetching sidebar content:', error);
       }
     };
 
-    if (role) {
-      permissions();
-    }
+    fetchPermissions();
   }, [role, navigate]);
 
+  const renderDashboard = () => {
+    switch (role) {
+      case 'student':
+        return <StudentDashboard />;
+      case 'teacher':
+        return <AdminDashboard />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: 0, padding: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* Header */}
       <div
-
         className="header d-flex align-items-center justify-content-between"
         style={{
           position: 'fixed',
           top: 0,
-          left: 0,
           width: '100%',
           backgroundColor: '#282c34',
           color: 'white',
           padding: '0 2rem',
-          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
           height: '60px',
           zIndex: 1000,
         }}
       >
-        <h2>{organization}</h2>
-      <div className="d-flex align-items-center"> 
-      <FaUserCircle size={30} style={{ marginRight: '10px' }} />
-      <div className="text-left">
-        <span className="d-block" style={{ fontSize: '1rem' }}>
-          {firstName} {lastName}
-        </span>
-        <p className="mb-0" style={{ fontSize: '0.5rem' }}>
-          {role}
-        </p>
-    </div>
-  </div>
+        <div className="d-flex align-items-center">
+          <FaUserCircle
+            size={30}
+            style={{ cursor: 'pointer', marginRight: '10px' }}
+            onClick={() => setShowProfile(!showProfile)}
+          />
+          <div>
+            <span>{name}</span>
+            <p>{role}</p>
+          </div>
+        </div>
       </div>
-
 
       <div style={{ display: 'flex', flex: 1, marginTop: '60px' }}>
         {/* Sidebar */}
@@ -80,12 +83,10 @@ const MainPage = () => {
           className={`sidebar ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
           style={{
             width: isSidebarExpanded ? '250px' : '80px',
-            transition: 'width 0.3s',
             backgroundColor: '#303060',
-            height: 'calc(100vh - 60px)',
             color: 'white',
+            transition: 'width 0.3s',
             overflowY: 'auto',
-            position: 'relative',
           }}
           onMouseEnter={() => setIsSidebarExpanded(true)}
           onMouseLeave={() => setIsSidebarExpanded(false)}
@@ -95,60 +96,21 @@ const MainPage = () => {
               <li
                 key={item.id}
                 style={{
-                  padding: '10px 20px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent', // Highlight on hover
+                  padding: '10px',
+                  backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
                 }}
-                onMouseEnter={() => setHoveredItemId(item.id)} // Set the hovered item
-                onMouseLeave={() => setHoveredItemId(null)} // Reset on mouse leave
+                onMouseEnter={() => setHoveredItemId(item.id)}
+                onMouseLeave={() => setHoveredItemId(null)}
               >
-                {isSidebarExpanded || hoveredItemId === item.id ? (
-                  <>
-                    <img
-                      src={item.icon_url}
-                      alt={item.permissions}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        marginRight: '10px',
-                      }}
-                    />
-                    <span>{item.permissions}</span>
-                  </>
-                ) : (
-                  <img
-                    src={item.icon_url}
-                    alt={item.permissions}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                    }}
-                  />
-                )}
+                {isSidebarExpanded ? item.permissions : <img src={item.icon_url} alt={item.permissions} style={{ width: '20px' }} />}
               </li>
             ))}
           </ul>
         </div>
 
         {/* Main Page */}
-        <div
-          className="main-page"
-          style={{
-            flex: 1,
-            padding: '10px',
-            backgroundColor: '#101125',
-            color: '#ffffff',
-            overflowY: 'auto',
-            paddingTop: '60px',
-          }}
-        >
-          <h1>{selectedItem?.permissions || 'Main Page'}</h1>
-          <p>Content related to "{selectedItem?.permissions}" goes here.</p>
+        <div style={{ flex: 1, backgroundColor: '#101125', color: 'white', padding: '10px', overflowY: 'auto' }}>
+          {showProfile ? <StudentProfile name={name} role={role} /> : renderDashboard()}
         </div>
       </div>
     </div>

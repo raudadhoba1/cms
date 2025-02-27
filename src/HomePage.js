@@ -116,6 +116,9 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+
+
+                
         </div>
 
         <footer style={footerStyle}>
