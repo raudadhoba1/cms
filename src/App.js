@@ -26,7 +26,8 @@ function App() {
         <Route path="/StudentDashboard" element={<StudentDashboard />} />
         <Route path="/StudentProfile" element={<StudentProfile />} />
         <Route path="/LeaveRequest" element={<LeaveRequest />} />
-        
+        <Route path="/MainPage" element={<MainPage />} />
+
       </Routes>
     </Router>
   );
