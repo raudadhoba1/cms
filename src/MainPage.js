@@ -1,19 +1,18 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import ClassMngt from './pages/admin/ClassMngt'; // Import Class Management
+import FacultyMngt from './pages/admin/FacultyMngt'; // Import Faculty Management
+import StudentMngt from './pages/admin/StudentMngt'; // Import Student Management
 
 const MainPage = () => {
   const [sidebarContent, setSidebarContent] = useState([]);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [hoveredItemId, setHoveredItemId] = useState(null); // Track hovered item
-  const [selectedItem, setSelectedItem] = useState(null)
+  const [hoveredItemId, setHoveredItemId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const navigate = useNavigate();
-
   const role = localStorage.getItem('role');
   const firstName = localStorage.getItem('firstName');
   const lastName = localStorage.getItem('lastName');
@@ -24,27 +23,27 @@ const MainPage = () => {
       navigate('/login');
       return;
     }
-    const permissions = async () => {
+    const fetchPermissions = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/permissions/${role}`);
+        const response = await axios.get(`http://172.17.30.231:8080/api/permissions/${role}`);
         setSidebarContent(response.data);
-        setSelectedItem = response.data[0];
+        setSelectedItem(response.data[0]); // Set first item as default
       } catch (error) {
         console.error('Error fetching sidebar content:', error);
       }
     };
 
-    if (role) {
-      permissions();
-    }
+    fetchPermissions();
   }, [role, navigate]);
 
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: 0, padding: 0 }}>
       {/* Header */}
       <div
-
         className="header d-flex align-items-center justify-content-between"
         style={{
           position: 'fixed',
@@ -60,19 +59,18 @@ const MainPage = () => {
         }}
       >
         <h2>{organization}</h2>
-      <div className="d-flex align-items-center"> 
-      <FaUserCircle size={30} style={{ marginRight: '10px' }} />
-      <div className="text-left">
-        <span className="d-block" style={{ fontSize: '1rem' }}>
-          {firstName} {lastName}
-        </span>
-        <p className="mb-0" style={{ fontSize: '0.5rem' }}>
-          {role}
-        </p>
-    </div>
-  </div>
+        <div className="d-flex align-items-center">
+          <FaUserCircle size={30} style={{ marginRight: '10px' }} />
+          <div className="text-left">
+            <span className="d-block" style={{ fontSize: '1rem' }}>
+              {firstName} {lastName}
+            </span>
+            <p className="mb-0" style={{ fontSize: '0.5rem' }}>
+              {role}
+            </p>
+          </div>
+        </div>
       </div>
-
 
       <div style={{ display: 'flex', flex: 1, marginTop: '60px' }}>
         {/* Sidebar */}
@@ -102,40 +100,30 @@ const MainPage = () => {
                   textOverflow: 'ellipsis',
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent', // Highlight on hover
+                  backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
                 }}
-                onMouseEnter={() => setHoveredItemId(item.id)} // Set the hovered item
-                onMouseLeave={() => setHoveredItemId(null)} // Reset on mouse leave
+                onMouseEnter={() => setHoveredItemId(item.id)}
+                onMouseLeave={() => setHoveredItemId(null)}
+                onClick={() => handleItemClick(item)}
               >
                 {isSidebarExpanded || hoveredItemId === item.id ? (
                   <>
                     <img
                       src={item.icon_url}
                       alt={item.permissions}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        marginRight: '10px',
-                      }}
+                      style={{ width: '20px', height: '20px', marginRight: '10px' }}
                     />
                     <span>{item.permissions}</span>
                   </>
                 ) : (
-                  <img
-                    src={item.icon_url}
-                    alt={item.permissions}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                    }}
-                  />
+                  <img src={item.icon_url} alt={item.permissions} style={{ width: '20px', height: '20px' }} />
                 )}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Main Page */}
+        {/* Main Content */}
         <div
           className="main-page"
           style={{
@@ -147,8 +135,18 @@ const MainPage = () => {
             paddingTop: '60px',
           }}
         >
-          <h1>{selectedItem?.permissions || 'Main Page'}</h1>
-          <p>Content related to "{selectedItem?.permissions}" goes here.</p>
+          {selectedItem?.permissions === 'Manage Courses & Subjects' ? (
+            <ClassMngt />
+          ) : selectedItem?.permissions === 'Manage Faculty' ? (
+            <FacultyMngt />
+          ) : selectedItem?.permissions === 'Manage Students' ? (
+            <StudentMngt />
+          ) : (
+            <>
+              <h1>{selectedItem?.permissions || 'Main Page'}</h1>
+              <p>Content related to "{selectedItem?.permissions}" goes here.</p>
+            </>
+          )}
         </div>
       </div>
     </div>
