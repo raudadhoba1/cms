@@ -105,27 +105,23 @@ const MainPage = () => {
           onMouseEnter={() => setIsSidebarExpanded(true)}
           onMouseLeave={() => setIsSidebarExpanded(false)}
         >
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {sidebarContent.map((item) => (
-              <li
-                key={item.id}
-                style={{
-                  padding: '10px',
-                  backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={() => setHoveredItemId(item.id)}
-                onMouseLeave={() => setHoveredItemId(null)}
-                onClick={() => handleSidebarClick(item)}
-              >
-                {isSidebarExpanded ? (
-                  item.permissions
-                ) : (
-                  <img src={item.icon_url} alt={item.permissions} style={{ width: '20px' }} />
-                )}
-              </li>
-            ))}
-          </ul>
+         <ul style={{ listStyle: 'none', padding: 0 }}>
+  {sidebarContent.map((item) => (
+    <li
+      key={item.id}
+      style={{
+        padding: '10px',
+        backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
+        cursor: 'pointer'
+      }}
+      onMouseEnter={() => setHoveredItemId(item.id)}
+      onMouseLeave={() => setHoveredItemId(null)}
+      onClick={() => handleSidebarClick(item)}
+    >
+      {item.permissions}
+    </li>
+  ))}
+</ul>
         </div>
 
         {/* Main Content Area */}
