@@ -5,16 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentProfile from './pages/student/StudentProfile';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import MarkAtt from "./pages/teachers/MarkAtt";
+import TeacherDashboard from "./pages/teachers/TeacherDashboard";
 
 const MainPage = () => {
+  // State declarations
   const [sidebarContent, setSidebarContent] = useState([]);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [hoveredItemId, setHoveredItemId] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [activeComponent, setActiveComponent] = useState('teacher-dashboard');
 
   const navigate = useNavigate();
-
   const role = localStorage.getItem('role');
   const name = localStorage.getItem('name');
 
@@ -42,9 +45,20 @@ const MainPage = () => {
       case 'student':
         return <StudentDashboard />;
       case 'teacher':
+        return <TeacherDashboard />;
+      case 'admin':
         return <AdminDashboard />;
       default:
         return null;
+    }
+  };
+
+  const handleSidebarClick = (item) => {
+    setSelectedItem(item);
+    if (item.permissions === 'Mark Attendance') {
+      setActiveComponent('mark-attendance');
+    } else {
+      setActiveComponent(`${role}-dashboard`);
     }
   };
 
@@ -98,19 +112,45 @@ const MainPage = () => {
                 style={{
                   padding: '10px',
                   backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
+                  cursor: 'pointer'
                 }}
                 onMouseEnter={() => setHoveredItemId(item.id)}
                 onMouseLeave={() => setHoveredItemId(null)}
+                onClick={() => handleSidebarClick(item)}
               >
-                {isSidebarExpanded ? item.permissions : <img src={item.icon_url} alt={item.permissions} style={{ width: '20px' }} />}
+                {isSidebarExpanded ? (
+                  item.permissions
+                ) : (
+                  <img src={item.icon_url} alt={item.permissions} style={{ width: '20px' }} />
+                )}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Main Page */}
-        <div style={{ flex: 1, backgroundColor: '#101125', color: 'white', padding: '10px', overflowY: 'auto' }}>
-          {showProfile ? <StudentProfile name={name} role={role} /> : renderDashboard()}
+        {/* Main Content Area */}
+        <div
+          className="main-page"
+          style={{
+            flex: 1,
+            padding: '10px',
+            backgroundColor: 'white',
+            color: 'black',
+            overflowY: 'auto',
+            paddingTop: '60px',
+          }}
+        >
+          {showProfile ? (
+            <StudentProfile name={name} role={role} />
+          ) : (
+            <>
+              {activeComponent === 'mark-attendance' ? (
+                <MarkAtt />
+              ) : (
+                renderDashboard()
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

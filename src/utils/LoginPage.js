@@ -13,12 +13,19 @@ const LoginPage = () => {
   //console.log(backend_url)
 
   useEffect(() => {
+    // If the user is already authenticated, navigate to the respective page
     if (localStorage.getItem('isAuthenticated')) {
       const role = localStorage.getItem('role');
       if (role === 'ADMIN') {
         navigate('/admin');
       } else if (role === 'USER') {
         navigate('/user');
+      } else if (role === 'TEACHER') {
+        navigate('/teacher');
+      } else if (role === 'STUDENT') {
+        navigate('/student');
+      } else if (role === 'LIBRARIAN') {
+        navigate('/librarian');
       }
     }
   }, [navigate]);
@@ -26,6 +33,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Check if both email and password are provided
     if (!email || !password) {
       setShowError(true);
       return;
@@ -38,32 +46,48 @@ const LoginPage = () => {
         password,
       });
 
+      // Check if response is successful
       if (response.status === 200) {
+<<<<<<< HEAD
         const { userId, email, name, role } = response.data;
 
         if (userId) {
+=======
+        const { userId, email, firstName, lastName, role, organization, status } = response.data;
+
+        if (userId) {
+          // Store user details in localStorage
+          localStorage.setItem('isAuthenticated', 'true');
+>>>>>>> 56f8b4eee3178fdd3a3da51cda42f861b7504a3e
           localStorage.setItem('userId', userId);
           localStorage.setItem('email', email);
           localStorage.setItem('name', name); 
           localStorage.setItem('role', role);
+<<<<<<< HEAD
         
+=======
+          localStorage.setItem('organization', organization);
+          localStorage.setItem('status', status);
+
+          // Navigate based on user role
+>>>>>>> 56f8b4eee3178fdd3a3da51cda42f861b7504a3e
           if (role === 'ADMIN') {
             navigate('/admin');
-          } else if(role === "TEACHER") {
+          } else if (role === 'TEACHER') {
             navigate('/teacher');
           } else if (role === 'STUDENT') {
             navigate('/student');
-          }else if (role === 'LIBRARIAN') {
+          } else if (role === 'LIBRARIAN') {
             navigate('/librarian');
           } else {
             navigate('/');
           }
         }
       } else {
-        setShowError(true);
+        setShowError(true); // Show error if login fails
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error during login:', error.response || error.message);
       setShowError(true);
     } finally {
       setLoading(false);
@@ -111,6 +135,7 @@ const LoginPage = () => {
                 </button>
               </form>
 
+              {/* Show error message if credentials are invalid */}
               {showError && (
                 <div className="alert alert-danger mt-3">
                   Invalid credentials. Please try again.
