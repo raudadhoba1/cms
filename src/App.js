@@ -25,13 +25,13 @@ function App() {
         <Route path="/teacher" element={<MainPage />} />
         <Route path="/student" element={<MainPage />} />
         <Route path="/librarian" element={<MainPage />} />
-        <Route path="/MarkAtt" element={<MainPage />} />
-        <Route path="/TeacherDashboard" element={<MainPage />} />
-        <Route path="/TeacherProfile" element={<MainPage />} />
-        <Route path="/ViewAttendance" element={<MainPage />} />
-        <Route path="/StudentDashboard" element={<MainPage />} />
-        <Route path="/StudentProfile" element={<MainPage />} />
-        <Route path="/LeaveRequest" element={<MainPage />} />
+        <Route path="/MarkAtt" element={<MarkAtt />} />
+        <Route path="/TeacherDashboard" element={<TeacherDashboard />} />
+        <Route path="/TeacherProfile" element={<TeacherProfile />} />
+        <Route path="/ViewAttendance" element={<ViewAttendance />} />
+        <Route path="/StudentDashboard" element={<StudentDashboard />} />
+        <Route path="/StudentProfile" element={<StudentProfile />} />
+        <Route path="/LeaveRequest" element={<LeaveRequest />} />
 
       </Routes>
     </Router>

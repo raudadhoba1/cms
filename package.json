@@ -8,17 +8,11 @@
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.8",
     "cra-template": "1.2.0",
-<<<<<<< HEAD
     "dotenv": "^16.4.7",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-chartjs-2": "^5.3.0",
-=======
-    "qrcode.react": "^4.2.0",
-    "react": "^19.0.0",
-    "react-bootstrap": "^2.10.9",
->>>>>>> 56f8b4eee3178fdd3a3da51cda42f861b7504a3e
     "react-dom": "^19.0.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^5.4.0",

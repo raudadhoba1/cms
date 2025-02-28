@@ -48,29 +48,15 @@ const LoginPage = () => {
 
       // Check if response is successful
       if (response.status === 200) {
-<<<<<<< HEAD
         const { userId, email, name, role } = response.data;
 
         if (userId) {
-=======
-        const { userId, email, firstName, lastName, role, organization, status } = response.data;
-
-        if (userId) {
-          // Store user details in localStorage
-          localStorage.setItem('isAuthenticated', 'true');
->>>>>>> 56f8b4eee3178fdd3a3da51cda42f861b7504a3e
           localStorage.setItem('userId', userId);
           localStorage.setItem('email', email);
           localStorage.setItem('name', name); 
           localStorage.setItem('role', role);
-<<<<<<< HEAD
-        
-=======
-          localStorage.setItem('organization', organization);
-          localStorage.setItem('status', status);
 
           // Navigate based on user role
->>>>>>> 56f8b4eee3178fdd3a3da51cda42f861b7504a3e
           if (role === 'ADMIN') {
             navigate('/admin');
           } else if (role === 'TEACHER') {
