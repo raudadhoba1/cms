@@ -12,6 +12,10 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProfile from "./pages/student/StudentProfile";
 import LeaveRequest from "./pages/student/LeaveRequest";
 
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ClassMngt from "./pages/admin/ClassMngt";
+import FacultyMngt from "./pages/admin/FacultyMngt"
+import StudentMngt from "./pages/admin/StudentMngt"
 
 function App() {
  
@@ -32,6 +36,10 @@ function App() {
         <Route path="/StudentDashboard" element={<StudentDashboard />} />
         <Route path="/StudentProfile" element={<StudentProfile />} />
         <Route path="/LeaveRequest" element={<LeaveRequest />} />
+        <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/ClassMngt" element={<ClassMngt/>} />
+        <Route path="/FacultyMngt" element={<FacultyMngt />} />
+        <Route path="/StudentMngt" element={<StudentMngt />} />
 
       </Routes>
     </Router>

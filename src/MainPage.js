@@ -7,6 +7,9 @@ import StudentProfile from './pages/student/StudentProfile';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import MarkAtt from "./pages/teachers/MarkAtt";
 import TeacherDashboard from "./pages/teachers/TeacherDashboard";
+import ClassMngt from './pages/admin/ClassMngt'; // Import Class Management
+import FacultyMngt from './pages/admin/FacultyMngt'; // Import Faculty Management
+import StudentMngt from './pages/admin/StudentMngt'; // Import Student Management
 
 const MainPage = () => {
   // State declarations
@@ -31,7 +34,7 @@ const MainPage = () => {
       try {
         const response = await axios.get(`http://172.17.30.231:8080/api/permissions/${role}`);
         setSidebarContent(response.data);
-        setSelectedItem(response.data[0]);
+        setSelectedItem(response.data[0]); // Set first item as default
       } catch (error) {
         console.error('Error fetching sidebar content:', error);
       }
@@ -87,67 +90,104 @@ const MainPage = () => {
           <div>
             <span>{name}</span>
             <p>{role}</p>
+            <h2>{organization}</h2>
+            <div className="d-flex align-items-center">
+              <FaUserCircle size={30} style={{ marginRight: '10px' }} />
+              <div className="text-left">
+                <span className="d-block" style={{ fontSize: '1rem' }}>
+                  {firstName} {lastName}
+                </span>
+                <p className="mb-0" style={{ fontSize: '0.5rem' }}>
+                  {role}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flex: 1, marginTop: '60px' }}>
+            {/* Sidebar */}
+            <div
+              className={`sidebar ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
+              style={{
+                width: isSidebarExpanded ? '250px' : '80px',
+                backgroundColor: '#303060',
+                color: 'white',
+                transition: 'width 0.3s',
+                overflowY: 'auto',
+              }}
+              onMouseEnter={() => setIsSidebarExpanded(true)}
+              onMouseLeave={() => setIsSidebarExpanded(false)}
+            >
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {sidebarContent.map((item) => (
+                  <li
+                    key={item.id}
+                    style={{
+                      padding: '10px',
+                      backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={() => setHoveredItemId(item.id)}
+                    onMouseLeave={() => setHoveredItemId(null)}
+                    onClick={() => {
+                      handleSidebarClick(item);
+                      handleItemClick(item);
+                    }}
+                  >
+                    {isSidebarExpanded || hoveredItemId === item.id ? (
+                      <>
+                        <img
+                          src={item.icon_url}
+                          alt={item.permissions}
+                          style={{ width: '20px', height: '20px', marginRight: '10px' }}
+                        />
+                        <span>{item.permissions}</span>
+                      </>
+                    ) : (
+                      <img src={item.icon_url} alt={item.permissions} style={{ width: '20px', height: '20px' }} />
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-
-      <div style={{ display: 'flex', flex: 1, marginTop: '60px' }}>
-        {/* Sidebar */}
-        <div
-          className={`sidebar ${isSidebarExpanded ? 'expanded' : 'collapsed'}`}
-          style={{
-            width: isSidebarExpanded ? '250px' : '80px',
-            backgroundColor: '#303060',
-            color: 'white',
-            transition: 'width 0.3s',
-            overflowY: 'auto',
-          }}
-          onMouseEnter={() => setIsSidebarExpanded(true)}
-          onMouseLeave={() => setIsSidebarExpanded(false)}
-        >
-         <ul style={{ listStyle: 'none', padding: 0 }}>
-  {sidebarContent.map((item) => (
-    <li
-      key={item.id}
-      style={{
-        padding: '10px',
-        backgroundColor: hoveredItemId === item.id ? '#4b5b8a' : 'transparent',
-        cursor: 'pointer'
-      }}
-      onMouseEnter={() => setHoveredItemId(item.id)}
-      onMouseLeave={() => setHoveredItemId(null)}
-      onClick={() => handleSidebarClick(item)}
-    >
-      {item.permissions}
-    </li>
-  ))}
-</ul>
-        </div>
-
-        {/* Main Content Area */}
-        <div
-          className="main-page"
-          style={{
-            flex: 1,
-            padding: '10px',
-            backgroundColor: 'white',
-            color: 'black',
-            overflowY: 'auto',
-            paddingTop: '60px',
-          }}
-        >
-          {showProfile ? (
-            <StudentProfile name={name} role={role} />
-          ) : (
-            <>
-              {activeComponent === 'mark-attendance' ? (
-                <MarkAtt />
-              ) : (
-                renderDashboard()
-              )}
-            </>
-          )}
-        </div>
+      {/* Main Content */}
+      <div
+        className="main-page"
+        style={{
+          flex: 1,
+          padding: '10px',
+          backgroundColor: 'white',
+          color: 'black',
+          overflowY: 'auto',
+          paddingTop: '60px',
+        }}
+      >
+        {showProfile ? (
+          <StudentProfile name={name} role={role} />
+        ) : (
+          <div>
+            {activeComponent === 'mark-attendance' ? (
+              <MarkAtt />
+            ) : (
+              renderDashboard()
+            )}
+            {selectedItem?.permissions === 'Manage Courses & Subjects' ? (
+              <ClassMngt />
+            ) : selectedItem?.permissions === 'Manage Faculty' ? (
+              <FacultyMngt />
+            ) : selectedItem?.permissions === 'Manage Students' ? (
+              <StudentMngt />
+            ) : (
+              <>
+                <h1>{selectedItem?.permissions || 'Main Page'}</h1>
+                <p>Content related to "{selectedItem?.permissions}" goes here.</p>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

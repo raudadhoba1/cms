@@ -41,25 +41,24 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://172.17.30.231:8080/api/login', {
-        email,
-        password,
-      });
+      const response = await axios.post('http://172.17.30.231:8080/api/login', { email, password });
 
       // Check if response is successful
       if (response.status === 200) {
-        const { userId, email, name, role } = response.data;
+        const { userId, email, firstName, lastName, role, organization, status } = response.data;
 
         if (userId) {
           localStorage.setItem('userId', userId);
           localStorage.setItem('email', email);
           localStorage.setItem('name', name); 
           localStorage.setItem('role', role);
+          localStorage.setItem('organization', organization);
+          localStorage.setItem('status', status);
 
           // Navigate based on user role
           if (role === 'ADMIN') {
             navigate('/admin');
-          } else if (role === 'TEACHER') {
+          } else if (role === "TEACHER") {
             navigate('/teacher');
           } else if (role === 'STUDENT') {
             navigate('/student');
@@ -81,12 +80,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container">
-      <div className="row justify-content-center align-items-center min-vh-100">
-        <div className="col-md-6 col-lg-4">
-          <div className="card shadow">
+    <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: '#131921' }}>
+      <div className="row w-100">
+        <div className="col-md-6 col-lg-4 mx-auto">
+          <div className="card shadow" style={{ backgroundColor: '#232f3e', color: '#ffffff', borderRadius: '8px' }}>
             <div className="card-body p-5">
-              <h2 className="text-center mb-4">Login</h2>
+              <h2 className="text-center mb-4">Log In</h2>
               <form onSubmit={handleLogin}>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">Email</label>
@@ -97,6 +96,7 @@ const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    style={{ backgroundColor: '#37475a', color: '#ffffff', border: 'none' }}
                   />
                 </div>
 
@@ -109,15 +109,17 @@ const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    style={{ backgroundColor: '#37475a', color: '#ffffff', border: 'none' }}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="btn btn-primary w-100"
+                  className="btn w-100"
                   disabled={loading}
+                  style={{ backgroundColor: '#febd69', color: '#131921', fontWeight: 'bold' }}
                 >
-                  {loading ? 'Logging in...' : 'Login'}
+                  {loading ? 'Wait a minute...' : 'Log In'}
                 </button>
               </form>
 

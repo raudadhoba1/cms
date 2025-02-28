@@ -1,147 +1,161 @@
-import React from 'react';
-import kleLogo from './images/kle_logo.png';
-import collgePic from './images/college.jpg';
+import React from "react";
+import clgLogo from "./images/college-logo.png";
+import clgPic from "./images/college-campus.png";
 
 const HomePage = () => {
-
   const containerStyle = {
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
   };
 
   const heroSectionStyle = {
-    background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${collgePic})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    color: 'white',
-    padding: '100px 0',
-    textAlign: 'center',
-  };
-
-  const featureCardStyle = {
-    textAlign: 'center',
-    padding: '30px',
-    transition: 'transform 0.3s ease-in-out',
-  };
-
-  const handleHover = (e) => {
-    e.target.style.transform = 'scale(1.05)';
-  };
-
-  const handleLeave = (e) => {
-    e.target.style.transform = 'scale(1)';
+    width: "100vw",
+    height: "70vh",
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${clgPic})`,
+    backgroundSize: "100% 100%",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start", // Aligns content to the top
+    justifyContent: "flex-start", // Pushes content to the top
+    textAlign: "left",
+    padding: "60px 100px", // Adds spacing from top and left
   };
 
   const footerStyle = {
-    padding: '40px 0',
-    marginTop: 'auto',
-    backgroundColor: '#343a40',
-    color: 'white',
+    padding: "40px 0 0 0", // Removes bottom padding, keeps top padding
+    marginTop: "auto",
+    backgroundColor: "#212529", // Same as Bootstrap's "bg-dark"
+    color: "white",
   };
+  
 
   return (
-    <>
-      <div style={containerStyle}>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <div className="container">
-            <a className="navbar-brand" href="/" aria-label="Go to Home Page">
-              <img src={kleLogo} alt="College Logo" height="40" />
-              CMS
-            </a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="#about">About</a>
+    <div style={containerStyle}>
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div className="container">
+          <a className="navbar-brand" href="/" aria-label="Go to Home Page">
+            <img src={clgLogo} alt="College Logo" height="40" /> Pillai HOC
+            College of Arts, Science & Commerce
+          </a>
+          {/* <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ms-auto">
+              <li className="nav-item">
+                <a className="nav-link" href="#about">
+                  About
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#contact">
+                  Contact
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="btn btn-primary nav-link text-white"
+                  href="/login"
+                  role="button"
+                >
+                  Enter into Portal
+                </a>
+              </li>
+            </ul>
+          </div> */}
+        </div>
+      </nav>
+      {/* Hero Section */}
+      <div
+        style={heroSectionStyle}
+        className="d-flex flex-column align-items-center text-center justify-content-center"
+      >
+        <div style={{ width: "100%", paddingTop: "40px" }}>
+          <h1>Welcome to Student Attendance Monitoring System!</h1>
+          <p>A comprehensive portal for Attendance Management.</p>
+          <a href="/login" className="btn btn-warning mt-3">
+            Login To Your Portal!
+          </a>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer style={footerStyle}>
+        <div className="container">
+          <div className="row">
+            {/* Contact Information - 1/3 Width */}
+            <div className="col-md-4">
+              <h5>Pillai HOCL Educational Campus</h5>
+              <p>
+                Rasayani, Taluka Khalapur <br />
+                Dist. Raigad – 410207 MAH, India
+              </p>
+              <p>
+                <strong>Email:</strong> <br />
+                <a href="mailto:latakm@mes.ac.in" style={{ color: "white" }}>
+                  latakm@mes.ac.in
+                </a>{" "}
+                <br />
+                <a href="mailto:phcasc@mes.ac.in" style={{ color: "white" }}>
+                  phcasc@mes.ac.in
+                </a>
+              </p>
+            </div>
+
+            {/* Quick Links - 1/3 Width */}
+            <div className="col-md-4">
+              <h5>Quick Links</h5>
+              <ul className="list-unstyled">
+                <li>
+                  <a href="#about" style={{ color: "white" }}>
+                    About Us
+                  </a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#contact">Contact</a>
+                <li>
+                  <a href="#contact" style={{ color: "white" }}>
+                    Contact
+                  </a>
                 </li>
-                <li className="nav-item">
-                  <a className="btn btn-primary nav-link text-white" href="/login" role="button">
-                    Enter into Portal
+                <li>
+                  <a href="#privacy" style={{ color: "white" }}>
+                    Privacy Policy
                   </a>
                 </li>
               </ul>
             </div>
-          </div>
-        </nav>
 
-        <div style={heroSectionStyle} className="d-flex justify-content-center align-items-center">
-          <div className="container text-center">
-            <h1>Welcome to College Management System</h1>
-            <p>A comprehensive portal for College Administration</p>
-          </div>
-        </div>
+            {/* Additional Contact - 1/3 Width */}
+            <div className="col-md-4 text-md-end">
+              <h5>Contact PieCoderz</h5>
+              <p>Email: raudadhoba@gmail.com</p>
+            </div>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <div
-                className="feature-card"
-                style={featureCardStyle}
-                onMouseEnter={handleHover}
-                onMouseLeave={handleLeave}
-              >
-                <i className="bi bi-calendar-check" style={{ fontSize: '2.5rem', color: '#0d6efd' }}></i>
-                <h4>Attendance Management</h4>
-                <p>Track and manage attendance records efficiently</p>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div
-                className="feature-card"
-                style={featureCardStyle}
-                onMouseEnter={handleHover}
-                onMouseLeave={handleLeave}
-              >
-                <i className="bi bi-graph-up" style={{ fontSize: '2.5rem', color: '#0d6efd' }}></i>
-                <h4>Results & Grades</h4>
-                <p>Access academic performance and results</p>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div
-                className="feature-card"
-                style={featureCardStyle}
-                onMouseEnter={handleHover}
-                onMouseLeave={handleLeave}
-              >
-                <i className="bi bi-book" style={{ fontSize: '2.5rem', color: '#0d6efd' }}></i>
-                <h4>Library Management</h4>
-                <p>Digital library access and book management</p>
-              </div>
+            <div className="text-center mt-4">
+              <p>
+                Made with <span style={{ color: "red" }}>❤️</span> by{" "}
+                <strong>PieCoderz</strong>
+              </p>
             </div>
           </div>
 
 
                 
         </div>
-
-        <footer style={footerStyle}>
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6">
-                <h5>Contact Us</h5>
-                <p>Email: info@college.edu</p>
-                <p>Phone: (123) 456-7890</p>
-              </div>
-              <div className="col-md-6 text-md-end">
-                <h5>Quick Links</h5>
-                <ul className="list-unstyled">
-                  <li><a href="#about" style={{ color: 'white' }}>About Us</a></li>
-                  <li><a href="#contact" style={{ color: 'white' }}>Contact</a></li>
-                  <li><a href="#privacy" style={{ color: 'white' }}>Privacy Policy</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
+      </footer>
+    </div>
   );
 };
 
